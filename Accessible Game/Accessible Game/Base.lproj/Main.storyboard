@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cwH-r1-8M7">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Item 2-->
+        <scene sceneID="7fS-oD-vO6">
+            <objects>
+                <viewController id="2wX-Ye-mzE" customClass="SecondViewController" customModule="Accessible_Game" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="y9N-sA-uh7">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <sceneKitView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nDS-zw-YYc">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="813"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </sceneKitView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Match your face to the face of the emoji and press capture" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j9U-cr-usD">
+                                <rect key="frame" x="50" y="54" width="314" height="41"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tqq-2g-8al">
+                                <rect key="frame" x="0.0" y="265" width="414" height="470"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gHF-yE-lPr">
+                                <rect key="frame" x="179.5" y="763" width="55" height="30"/>
+                                <state key="normal" title="Capture"/>
+                                <connections>
+                                    <action selector="capturePressed:" destination="2wX-Ye-mzE" eventType="touchUpInside" id="HZN-ex-EkA"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="smile" translatesAutoresizingMaskIntoConstraints="NO" id="rIh-xM-qdj">
+                                <rect key="frame" x="120" y="100" width="160" height="160"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="j9U-cr-usD" firstAttribute="top" secondItem="CvP-gX-apa" secondAttribute="top" constant="10" id="4BJ-B5-gc6"/>
+                            <constraint firstItem="Tqq-2g-8al" firstAttribute="top" secondItem="rIh-xM-qdj" secondAttribute="bottom" constant="5" id="GI5-8q-fyB"/>
+                            <constraint firstItem="gHF-yE-lPr" firstAttribute="centerX" secondItem="y9N-sA-uh7" secondAttribute="centerX" id="NfX-N3-1CZ"/>
+                            <constraint firstItem="Tqq-2g-8al" firstAttribute="centerX" secondItem="gHF-yE-lPr" secondAttribute="centerX" id="Pb6-dp-H6K"/>
+                            <constraint firstItem="j9U-cr-usD" firstAttribute="width" secondItem="y9N-sA-uh7" secondAttribute="width" constant="-100" id="T2s-3h-uhr"/>
+                            <constraint firstItem="rIh-xM-qdj" firstAttribute="top" secondItem="j9U-cr-usD" secondAttribute="bottom" constant="5" id="YhS-67-NjT"/>
+                            <constraint firstItem="Tqq-2g-8al" firstAttribute="width" secondItem="y9N-sA-uh7" secondAttribute="width" id="bYb-YP-mgr"/>
+                            <constraint firstItem="gHF-yE-lPr" firstAttribute="top" secondItem="Tqq-2g-8al" secondAttribute="bottom" constant="28" id="gnr-LD-pOj"/>
+                            <constraint firstItem="rIh-xM-qdj" firstAttribute="leading" secondItem="CvP-gX-apa" secondAttribute="leading" constant="120" id="pnJ-f6-FFt"/>
+                            <constraint firstItem="j9U-cr-usD" firstAttribute="centerX" secondItem="y9N-sA-uh7" secondAttribute="centerX" id="wmS-hx-JTB"/>
+                            <constraint firstItem="CvP-gX-apa" firstAttribute="bottom" secondItem="gHF-yE-lPr" secondAttribute="bottom" constant="20" id="woA-js-495"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="CvP-gX-apa"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Item 2" id="wwW-hf-f1k"/>
+                    <connections>
+                        <outlet property="emojiImage" destination="rIh-xM-qdj" id="gBm-gp-E6u"/>
+                        <outlet property="sceneView" destination="nDS-zw-YYc" id="Acl-3F-iFG"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gk9-gO-IN7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-668.11594202898561" y="674.33035714285711"/>
+        </scene>
+        <!--Item 1-->
+        <scene sceneID="35m-c1-bJW">
+            <objects>
+                <viewController id="sRo-I7-svx" customClass="FirstViewController" customModule="Accessible_Game" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="jtX-tU-BZj">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="siN-jk-ZJk">
+                                <rect key="frame" x="179" y="727" width="56" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="EmojME"/>
+                            </button>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4kg-dZ-gJf">
+                                <rect key="frame" x="67" y="236" width="292" height="462"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Make a face and press capture to capture. The app will then generate an emoji that is the closest match to the face you made." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mCX-zw-6P3">
+                                <rect key="frame" x="42" y="114" width="331" height="83"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="TP5-EC-o0v"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Item 1" id="Bp3-EE-TGp"/>
+                    <connections>
+                        <outlet property="cameraView" destination="4kg-dZ-gJf" id="gCP-Vg-JlJ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UOd-9y-yKg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-668.11594202898561" y="21.428571428571427"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="q5a-1j-fV2">
+            <objects>
+                <viewController id="qNQ-Un-SvE" customClass="ViewController" customModule="Accessible_Game" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="FW6-na-3rN">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <sceneKitView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lrs-aG-dL3">
+                                <rect key="frame" x="0.0" y="5" width="414" height="896"/>
+                            </sceneKitView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KB5-jL-sqG">
+                                <rect key="frame" x="184" y="433" width="46" height="30"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="buttonPressed:" destination="qNQ-Un-SvE" eventType="touchUpInside" id="AdW-6H-jqZ"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Lrs-aG-dL3" firstAttribute="centerY" secondItem="4qc-vI-tPE" secondAttribute="centerY" id="Jgd-Cv-FJu"/>
+                            <constraint firstItem="KB5-jL-sqG" firstAttribute="centerY" secondItem="FW6-na-3rN" secondAttribute="centerY" id="Vqh-Yj-VLd"/>
+                            <constraint firstItem="Lrs-aG-dL3" firstAttribute="centerX" secondItem="FW6-na-3rN" secondAttribute="centerX" id="erh-cE-SLw"/>
+                            <constraint firstItem="Lrs-aG-dL3" firstAttribute="width" secondItem="FW6-na-3rN" secondAttribute="width" id="gIu-x3-Eg0"/>
+                            <constraint firstItem="Lrs-aG-dL3" firstAttribute="height" secondItem="FW6-na-3rN" secondAttribute="height" id="o6U-03-BdD"/>
+                            <constraint firstItem="KB5-jL-sqG" firstAttribute="centerX" secondItem="FW6-na-3rN" secondAttribute="centerX" id="qos-Rx-Uvs"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="4qc-vI-tPE"/>
+                    </view>
+                    <connections>
+                        <outlet property="sceneView" destination="Lrs-aG-dL3" id="sMe-Ha-hh6"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lzf-gn-0fy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="663.768115942029" y="50.892857142857139"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="yon-dN-Icn">
+            <objects>
+                <tabBarController id="cwH-r1-8M7" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="IWP-mt-WLi">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="sRo-I7-svx" kind="relationship" relationship="viewControllers" id="zpx-5F-4sb"/>
+                        <segue destination="2wX-Ye-mzE" kind="relationship" relationship="viewControllers" id="zAc-rt-87J"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GjB-Ic-OZX" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1619" y="347"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="smile" width="160" height="160"/>
+    </resources>
+</document>
