@@ -31,4 +31,27 @@ class Emoji : Codable  {
     var eyeLookDownRight = [Float]()
     var eyeLookOutLeft = [Float]()
     
+    init() {
+        eyeBlinkLeft = []
+        eyeBlinkRight = []
+        browInnerUp = []
+        toungeOut = []
+        jawOpen = []
+        mouthSmileLeft = []
+        mouthSmileRight = []
+        browDownLeft = []
+        browDownRight = []
+        mouthPucker = []
+        mouthPressLeft = []
+        mouthPressRight = []
+        mouthDimpleLeft = []
+        browOuterUpLeft = []
+        browOuterUpRight = []
+        eyeLeftWide = []
+        mouthFrownLeft = []
+        eyeLookDownLeft = []
+        eyeLookDownRight = []
+        eyeLookOutLeft = []
+    }
+    
 }

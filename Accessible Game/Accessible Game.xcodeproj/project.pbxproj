@@ -12,8 +12,9 @@
 		040192072266C7810023C2CA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 040192052266C7810023C2CA /* Main.storyboard */; };
 		040192092266C7830023C2CA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 040192082266C7830023C2CA /* Assets.xcassets */; };
 		0401920C2266C7830023C2CA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0401920A2266C7830023C2CA /* LaunchScreen.storyboard */; };
-		0469361B227108A700A9A4D2 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0469361A227108A700A9A4D2 /* FirstViewController.swift */; };
-		0469361D2271095200A9A4D2 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0469361C2271095200A9A4D2 /* SecondViewController.swift */; };
+		0402576E22760C9F003601EA /* menuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402576D22760C9F003601EA /* menuViewController.swift */; };
+		042BCA0322750B02005D20C2 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042BCA0222750B02005D20C2 /* FirstViewController.swift */; };
+		042BCA0522750E35005D20C2 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042BCA0422750E35005D20C2 /* SecondViewController.swift */; };
 		04693621227161CF00A9A4D2 /* EmojiUserData.plist in Resources */ = {isa = PBXBuildFile; fileRef = 04693620227161CF00A9A4D2 /* EmojiUserData.plist */; };
 		046936232271634900A9A4D2 /* Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046936222271634900A9A4D2 /* Emoji.swift */; };
 /* End PBXBuildFile section */
@@ -26,8 +27,9 @@
 		040192082266C7830023C2CA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0401920B2266C7830023C2CA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0401920D2266C7830023C2CA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0469361A227108A700A9A4D2 /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
-		0469361C2271095200A9A4D2 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
+		0402576D22760C9F003601EA /* menuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = menuViewController.swift; sourceTree = "<group>"; };
+		042BCA0222750B02005D20C2 /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
+		042BCA0422750E35005D20C2 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		04693620227161CF00A9A4D2 /* EmojiUserData.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = EmojiUserData.plist; sourceTree = "<group>"; };
 		046936222271634900A9A4D2 /* Emoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emoji.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -65,13 +67,14 @@
 				040192012266C7810023C2CA /* AppDelegate.swift */,
 				040192032266C7810023C2CA /* ViewController.swift */,
 				040192052266C7810023C2CA /* Main.storyboard */,
-				0469361C2271095200A9A4D2 /* SecondViewController.swift */,
+				0402576D22760C9F003601EA /* menuViewController.swift */,
 				046936222271634900A9A4D2 /* Emoji.swift */,
 				04693620227161CF00A9A4D2 /* EmojiUserData.plist */,
 				040192082266C7830023C2CA /* Assets.xcassets */,
 				0401920A2266C7830023C2CA /* LaunchScreen.storyboard */,
 				0401920D2266C7830023C2CA /* Info.plist */,
-				0469361A227108A700A9A4D2 /* FirstViewController.swift */,
+				042BCA0222750B02005D20C2 /* FirstViewController.swift */,
+				042BCA0422750E35005D20C2 /* SecondViewController.swift */,
 			);
 			path = "Accessible Game";
 			sourceTree = "<group>";
@@ -149,9 +152,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				046936232271634900A9A4D2 /* Emoji.swift in Sources */,
-				0469361D2271095200A9A4D2 /* SecondViewController.swift in Sources */,
-				0469361B227108A700A9A4D2 /* FirstViewController.swift in Sources */,
 				040192042266C7810023C2CA /* ViewController.swift in Sources */,
+				042BCA0322750B02005D20C2 /* FirstViewController.swift in Sources */,
+				0402576E22760C9F003601EA /* menuViewController.swift in Sources */,
+				042BCA0522750E35005D20C2 /* SecondViewController.swift in Sources */,
 				040192022266C7810023C2CA /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
