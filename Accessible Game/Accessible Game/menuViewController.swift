@@ -8,8 +8,13 @@
 
 import UIKit
 
+//manages menu
+//changes mode
+//manages data persistance
+//passes data back and forth from other view controller
 class menuViewController: UIViewController {
     
+    @IBOutlet weak var menuImage: UIImageView!
     @IBOutlet weak var generateEmojiButton: UIButton!
     @IBOutlet weak var simonSaysButton: UIButton!
     @IBOutlet weak var callibrationButton: UIButton!
@@ -70,11 +75,16 @@ class menuViewController: UIViewController {
                 setUp = true
                 simonSaysButton.isEnabled = true
                 generateEmojiButton.isEnabled = true
+                menuImage.isHidden = false
                 for i in 0..<11 {
                     if allEmojis[i].toungeOut[0] == 0.0 && allEmojis[i].jawOpen[0] == 0.0 && allEmojis[i].mouthSmileLeft[0] == 0.0 {
                         setUp = false
                         simonSaysButton.isEnabled = false
                         generateEmojiButton.isEnabled = false
+                        currentEmojiIndex = i
+                        menuImage.isHidden = true
+                        setUpInstructions.isHidden = false
+                        break
                         
                     }
                 }
@@ -113,6 +123,7 @@ class menuViewController: UIViewController {
             }
             simonSaysButton.isEnabled = false
             generateEmojiButton.isEnabled = false
+            menuImage.isHidden = true
         }
         
         
@@ -149,11 +160,13 @@ class menuViewController: UIViewController {
             setUpInstructions.isHidden = true
             simonSaysButton.isEnabled = true
             generateEmojiButton.isEnabled = true
+            menuImage.isHidden = false
         }
         else{
             setUpInstructions.isHidden = false
             simonSaysButton.isEnabled = false
             generateEmojiButton.isEnabled = false
+            menuImage.isHidden = true
         }
     }
     

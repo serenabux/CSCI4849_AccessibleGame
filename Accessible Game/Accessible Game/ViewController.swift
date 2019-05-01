@@ -12,22 +12,39 @@ import ARKit
 class ViewController: UIViewController {
     
 
-    @IBOutlet weak var pauseButton: UIBarButtonItem!
+    @IBOutlet weak var topRightButton: UIBarButtonItem!
     @IBOutlet weak var pageLabel: UILabel!
     @IBOutlet weak var smileLabel: UILabel!
     @IBOutlet weak var trackingView: ARSCNView!
     @IBOutlet weak var instructionsLabel: UILabel!
     @IBOutlet weak var button: UIButton!
+    @IBOutlet weak var progressBar: UIProgressView!
     
     var allEmojis = [Emoji(),Emoji(),Emoji(),Emoji(),Emoji(),Emoji(),Emoji(),Emoji(),Emoji(),Emoji(),Emoji()]
     var tmpEmoji = Emoji()
+    //track what emoji was the last added to calibration
     var currentEmojiIndex = 0
-    let testEmojis = ["😀","😉","😘","😜","🤨","😏","😟","😠","😲","😬","😐"]
+    let labelEmojis = ["😀","😉","😘","😜","🤨","😏","😟","😠","😲","😬","😐"]
     
+    //track current mode and if calibration has been complete
     var currentGame = 0
     var setUp = false
     var callibrationRoundComplete = false
-    var pauseEmojiMatch = false
+    
+    //used to freeze in Emoji Match
+    var freezeMode = false
+    
+    //Timer varibales for Simon Says
+    var timer = Timer()
+    var timerIsDone = true
+    let roundTime: Float = 8
+    var currentTime: Float = 7
+    
+    //Varibales to help run Simon Says
+    var gameEmojiIndex = 0
+    var passed = false
+    var simonSaysBool = false
+    var points = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,46 +67,55 @@ class ViewController: UIViewController {
                 fatalError("This app needs Camera Access to function. You can grant access in Settings.")
             }
         }
+        //set tmp Emoji to have 1 value of summed values and 1 input
         for _ in 0..<2{
-            self.tmpEmoji.toungeOut.append(0.0)
-            self.tmpEmoji.jawOpen.append(0.0)
-            self.tmpEmoji.mouthSmileLeft.append(0.0)
-            self.tmpEmoji.mouthSmileRight.append(0.0)
-            self.tmpEmoji.mouthPucker.append(0.0)
-            self.tmpEmoji.mouthPressLeft.append(0.0)
-            self.tmpEmoji.mouthPressRight.append(0.0)
-            self.tmpEmoji.mouthDimpleLeft.append(0.0)
-            self.tmpEmoji.browDownLeft.append(0.0)
-            self.tmpEmoji.browDownRight.append(0.0)
-            self.tmpEmoji.browInnerUp.append(0.0)
-            self.tmpEmoji.browOuterUpLeft.append(0.0)
-            self.tmpEmoji.mouthFrownLeft.append(0.0)
-            self.tmpEmoji.mouthFrownRight.append(0.0)
-            self.tmpEmoji.eyeLookDownLeft.append(0.0)
-            self.tmpEmoji.eyeLookDownRight.append(0.0)
-            self.tmpEmoji.eyeLookOutLeft.append(0.0)
-            self.tmpEmoji.eyeBlinkRight.append(0.0)
-            self.tmpEmoji.eyeBlinkLeft.append(0.0)
-            self.tmpEmoji.eyeLeftWide.append(0.0)
-            self.tmpEmoji.mouthDimpleRight.append(0.0)
+            self.tmpEmoji.toungeOut.append(1.0)
+            self.tmpEmoji.jawOpen.append(1.0)
+            self.tmpEmoji.mouthSmileLeft.append(1.0)
+            self.tmpEmoji.mouthSmileRight.append(1.0)
+            self.tmpEmoji.mouthPucker.append(1.0)
+            self.tmpEmoji.mouthPressLeft.append(1.0)
+            self.tmpEmoji.mouthPressRight.append(1.0)
+            self.tmpEmoji.mouthDimpleLeft.append(1.0)
+            self.tmpEmoji.browDownLeft.append(1.0)
+            self.tmpEmoji.browDownRight.append(1.0)
+            self.tmpEmoji.browInnerUp.append(1.0)
+            self.tmpEmoji.browOuterUpLeft.append(1.0)
+            self.tmpEmoji.mouthFrownLeft.append(1.0)
+            self.tmpEmoji.mouthFrownRight.append(1.0)
+            self.tmpEmoji.eyeLookDownLeft.append(1.0)
+            self.tmpEmoji.eyeLookDownRight.append(1.0)
+            self.tmpEmoji.eyeLookOutLeft.append(1.0)
+            self.tmpEmoji.eyeBlinkRight.append(1.0)
+            self.tmpEmoji.eyeBlinkLeft.append(1.0)
+            self.tmpEmoji.eyeLeftWide.append(1.0)
+            self.tmpEmoji.mouthDimpleRight.append(1.0)
         }
-        
+         self.topRightButton.isEnabled = true
+        //change layout for view controller based on selection
         switch currentGame {
             //generate emoji
         case 0:
-            self.pageLabel.text = "Emoji Match"
+            self.pageLabel.text = "EmojiMe"
             self.instructionsLabel.text = "Make a face and the emoji will change to match your face. Press capture to pause on an emoji."
-            self.pauseButton.title = ""
+            self.topRightButton.title = "Freeze"
+            progressBar.isHidden = true
+            button.isHidden = true
+            self.button.setTitle("Capture", for: .normal)
         case 1:
             self.pageLabel.text = "Simon Says"
             self.instructionsLabel.text = "If Simon says match your face to the face of the emoji. If Simon doesn't say then make it as different as possible"
-            self.pauseButton.title = "Pause"
+            self.progressBar.isHidden = true
+            self.smileLabel.isHidden = true
+            self.button.setTitle("Play", for: .normal)
+            self.topRightButton.title = ""
         default:
-            self.pageLabel.text = "Callibration"
-            self.instructionsLabel.text = "In order to callibrate the app please match your face to the face of the shown emoji and press capture."
+            self.pageLabel.text = "Calibration"
+            self.instructionsLabel.text = "In order to calibrate the app please match your face to the face of the shown emoji and press capture."
             self.button.setTitle("Capture", for: .normal)
-            self.pauseButton.title = "Reset"
-            self.smileLabel.text = testEmojis[currentEmojiIndex]
+            self.topRightButton.title = "Reset"
+            self.smileLabel.text = labelEmojis[currentEmojiIndex]
+            progressBar.isHidden = true
         }
         
         
@@ -104,30 +130,55 @@ class ViewController: UIViewController {
     }
     
 
+
+//perform different actions when button is pressed based on mode
     @IBAction func buttonPressed(_ sender: Any) {
         switch currentGame {
         case 0:
-            if pauseEmojiMatch{
-                pauseEmojiMatch = false
-                self.instructionsLabel.text = "Make a face and the emoji will change to match your face. Press capture to pause on an emoji."
+            if freezeMode{
+                generateEmoji()
             }
-            else{
-                pauseEmojiMatch = true
-                self.instructionsLabel.text = "Make a face and the emoji will change to match your face. Press capture to return to changing emojis."
-            }
-        case 1: simonSays()
+            
+        case 1:
+            smileLabel.isHidden = false
+            button.isHidden = true
+            currentTime = roundTime-3
+            points = 0
+            simonSays()
         default: inputValuesButtonPressed()
         }
     }
     
+    //button in the top right corner is pressed, perform different actions based on button press and mode ]
     @IBAction func pauseButtonPressed(_ sender: Any) {
         switch currentGame {
-        //case 0: generateEmoji()
-        //case 1: simonSays()
+        case 0:
+            if freezeMode{
+                freezeMode = false
+                button.isHidden = true
+                topRightButton.title = "Freeze"
+                self.instructionsLabel.text = "Make a face and the emoji will change to match your face. Press freeze mode to switch modes."
+            }
+            else{
+                freezeMode = true
+                button.isHidden = false
+                topRightButton.title = "Regular"
+                self.instructionsLabel.text = "Make a face and press capture the emoji will update to match your face. Press 'Regular' to switch modes."
+            }
         default: resetCallibration()
         }
     }
+    
+    //generates the emoji and updates label for EmojMe mode
     func generateEmoji(){
+        let index = compareSimilarity()
+        smileLabel.text = labelEmojis[index]
+    }
+
+    //Use distance formula to figure out which input corresponds closest to users face
+    //Consider each element of allEmojis which corresponds to the emojis in the label emojis
+    //For each emoji compare all values and consider them elements in a vector
+    func compareSimilarity()->Int {
         var min: Float = 10000000.0
         var index = 0
         var currentNorm: Float = 0.00
@@ -136,8 +187,6 @@ class ViewController: UIViewController {
         for emoji in allEmojis{
             currentNorm = 0
             currentNorm += pow(emoji.toungeOut[0]/emoji.toungeOut[1] - tmpEmoji.toungeOut[0],2)
-            var tmp2 = emoji.jawOpen[0]
-            var tmp = emoji.jawOpen[0]/emoji.jawOpen[1] - tmpEmoji.jawOpen[0]
             currentNorm += pow(emoji.jawOpen[0]/emoji.jawOpen[1] - tmpEmoji.jawOpen[0],2)
             currentNorm += pow(emoji.mouthSmileLeft[0]/emoji.mouthSmileLeft[1] - tmpEmoji.mouthSmileLeft[0],2)
             currentNorm += pow(emoji.mouthSmileRight[0]/emoji.mouthSmileRight[1] - tmpEmoji.mouthSmileRight[0],2)
@@ -156,57 +205,160 @@ class ViewController: UIViewController {
             currentNorm += pow(emoji.eyeBlinkLeft[0]/emoji.eyeBlinkLeft[1] - tmpEmoji.eyeBlinkLeft[0],2)
             currentNorm += pow(emoji.eyeLeftWide[0]/emoji.eyeLeftWide[1] - tmpEmoji.eyeLeftWide[0],2)
             
-            
-            print(currentNorm)
             if currentNorm < min {
                 min = currentNorm
                 index = i
             }
             i+=1
         }
-        smileLabel.text = testEmojis[index]
+        return index
     }
     
-    func simonSays(){
+    //runs a timer for Simon Says
+    func runTimer() {
+        timerIsDone = false
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+    }
+    
+    //Called by run timer
+    //Perform checks for similarity
+    //If simon says user must hold the face of the emoji for the given time (that emoji must be the most similar)
+    //If simon doesn't say the user must never be the most similar to the given emoji
+    //A transition period of 2 seconds allows the user to change their face
+    //If user passes Simon Says is called again and the game continues
+    @objc func updateTimer() {
+        if currentTime > roundTime - 3{
+            currentTime -= 1
+            return
+        }
+        if currentTime > 1{
+            currentTime -= 1     //This will decrement(count down)the seconds.
+            print("Current time in update: \(currentTime)")
+            progressBar.progress = currentTime/(roundTime - 3)
+            let index = compareSimilarity()
+            print(index)
+            if index == gameEmojiIndex{
+                if(simonSaysBool){
+                   passed = true
+                }
+                else{
+                    timer.invalidate()
+                    currentTime = 0
+                    timerIsDone = true
+                    progressBar.isHidden = true
+                    instructionsLabel.isHidden = false
+                    instructionsLabel.text = "You lose! Simon didn't say " + labelEmojis[gameEmojiIndex] + "! Points: " + String(points)
+                    button.isHidden = false
+                    button.setTitle("Play Again?", for: .normal)
+                    self.timerIsDone = true
+                    timer.invalidate()
+                    return
+                }
+                
+            }
+        }
+        else{
+            if (simonSaysBool){
+                timer.invalidate()
+                timerIsDone = true
+                currentTime = 0
+                progressBar.isHidden = true
+                instructionsLabel.isHidden = false
+                if(passed){
+                    points+=1
+                    simonSays()
+                }
+                else{
+                    instructionsLabel.text = "You lose! You didn't match " + labelEmojis[gameEmojiIndex] + "! Points: " + String(points)
+                    button.isHidden = false
+                    button.setTitle("Play Again?", for: .normal)
+                    self.timerIsDone = true
+                    smileLabel.isHidden = true
+                }
+                
+               return
+            }
+            else{
+                currentTime = 0
+                timer.invalidate()
+                instructionsLabel.isHidden = false
+                progressBar.isHidden = true
+                timerIsDone = true
+                points += 1
+                simonSays()
+                return
+            }
+        }
         
     }
     
+    
+    //Manages set up for each round of Simon Says Game Play
+    func simonSays(){
+        passed = false
+        simonSaysBool = Bool.random()
+        if simonSaysBool{
+            pageLabel.text = "Simon Says"
+        }
+        else{
+            pageLabel.text = ""
+        }
+            currentTime = roundTime - 3
+        print("Current time: \(currentTime)")
+            progressBar.isHidden = false
+            instructionsLabel.isHidden = true
+            progressBar.progress = 100
+            gameEmojiIndex = Int.random(in: 0 ... 10)
+            smileLabel.text = labelEmojis[gameEmojiIndex]
+            runTimer()
+    }
+    
+    
+    //Clear all previous callibration so that the user can start fresh
     func resetCallibration(){
+        topRightButton.isEnabled = false
         currentEmojiIndex = 0
-        smileLabel.text = testEmojis[0]
+        smileLabel.text = labelEmojis[0]
+        let reset: Float = 0.0
         for i in 0..<11 {
             for j in 0..<2{
-                allEmojis[i].toungeOut[j] = (0.0)
-                allEmojis[i].jawOpen[j] = (0.0)
-                allEmojis[i].mouthSmileLeft[j] = (0.0)
-                allEmojis[i].mouthSmileRight[j]=(0.0)
-                allEmojis[i].mouthPucker[j]=(0.0)
-                allEmojis[i].mouthPressLeft[j]=(0.0)
-                allEmojis[i].mouthPressRight[j]=(0.0)
-                allEmojis[i].mouthDimpleLeft[j]=(0.0)
-                allEmojis[i].browDownLeft[j]=(0.0)
-                allEmojis[i].browDownRight[j]=(0.0)
-                allEmojis[i].browInnerUp[j]=(0.0)
-                allEmojis[i].browOuterUpLeft[j]=(0.0)
-                allEmojis[i].mouthFrownLeft[j]=(0.0)
-                allEmojis[i].mouthFrownRight[j]=(0.0)
-                allEmojis[i].eyeLookDownLeft[j]=(0.0)
-                allEmojis[i].eyeLookDownRight[j]=(0.0)
-                allEmojis[i].eyeLookOutLeft[j]=(0.0)
-                allEmojis[i].eyeBlinkRight[j]=(0.0)
-                allEmojis[i].eyeBlinkLeft[j]=0.0
-                allEmojis[i].eyeLeftWide[j]=(0.0)
-                allEmojis[i].mouthDimpleRight[j]=(0.0)
+                allEmojis[i].toungeOut[j] = reset
+                allEmojis[i].jawOpen[j] = reset
+                allEmojis[i].mouthSmileLeft[j] = reset
+                allEmojis[i].mouthSmileRight[j]=reset
+                allEmojis[i].mouthPucker[j]=reset
+                allEmojis[i].mouthPressLeft[j]=reset
+                allEmojis[i].mouthPressRight[j]=reset
+                allEmojis[i].mouthDimpleLeft[j]=reset
+                allEmojis[i].browDownLeft[j]=reset
+                allEmojis[i].browDownRight[j]=reset
+                allEmojis[i].browInnerUp[j]=reset
+                allEmojis[i].browOuterUpLeft[j]=reset
+                allEmojis[i].mouthFrownLeft[j]=reset
+                allEmojis[i].mouthFrownRight[j]=reset
+                allEmojis[i].eyeLookDownLeft[j]=reset
+                allEmojis[i].eyeLookDownRight[j]=reset
+                allEmojis[i].eyeLookOutLeft[j]=reset
+                allEmojis[i].eyeBlinkRight[j]=reset
+                allEmojis[i].eyeBlinkLeft[j]=reset
+                allEmojis[i].eyeLeftWide[j]=reset
+                allEmojis[i].mouthDimpleRight[j]=reset
             }
         }
         setUp = false
     }
     
+    
+    //Cycle through emojis and store values for their face upon capture
+    //They are stored in an array of the class Emoji
+    //Each element in emoji is made up of attributes
+    //Each attribute contains 2 elements, one for running sum and one for total input
+    //When cycle is complete alert user
     func inputValuesButtonPressed(){
         if(callibrationRoundComplete){
             smileLabel.isHidden = false
             callibrationRoundComplete = false
-            self.instructionsLabel.text = "In order to callibrate the app please match your face to the face of the shown emoji and press capture."
+            self.instructionsLabel.text = "Please match your face to the face of the shown emoji and press capture. To discard all previous data and start calibration over press reset."
             return
     
         }
@@ -230,42 +382,46 @@ class ViewController: UIViewController {
         allEmojis[currentEmojiIndex].eyeBlinkLeft[0] = tmpEmoji.eyeBlinkLeft[0] + allEmojis[currentEmojiIndex].eyeBlinkLeft[0]
         allEmojis[currentEmojiIndex].eyeBlinkRight[0]=tmpEmoji.eyeLookDownRight[0]+allEmojis[currentEmojiIndex].eyeBlinkRight[0]
         allEmojis[currentEmojiIndex].eyeLeftWide[0] = tmpEmoji.eyeLeftWide[0] + allEmojis[currentEmojiIndex].eyeLeftWide[0]
-
-        allEmojis[currentEmojiIndex].toungeOut[1]+=1.0
-        allEmojis[currentEmojiIndex].jawOpen[1]+=1
-        allEmojis[currentEmojiIndex].mouthSmileLeft[1]+=1
-        allEmojis[currentEmojiIndex].mouthSmileRight[1]+=1
-        allEmojis[currentEmojiIndex].mouthPucker[1]+=1
-        allEmojis[currentEmojiIndex].mouthPressLeft[1]+=1
-        allEmojis[currentEmojiIndex].mouthPressRight[1]+=1
-        allEmojis[currentEmojiIndex].mouthDimpleLeft[1]+=1
-        allEmojis[currentEmojiIndex].browDownLeft[1]+=1
-        allEmojis[currentEmojiIndex].browDownRight[1]+=1
-        allEmojis[currentEmojiIndex].browInnerUp[1]+=1
-        allEmojis[currentEmojiIndex].browOuterUpLeft[1]+=1
-        allEmojis[currentEmojiIndex].mouthFrownLeft[1]+=1
-        allEmojis[currentEmojiIndex].mouthFrownRight[1]+=1
-        allEmojis[currentEmojiIndex].eyeLookDownLeft[1]+=1
-        allEmojis[currentEmojiIndex].eyeLookDownRight[1]+=1
-        allEmojis[currentEmojiIndex].eyeLookOutLeft[1]+=1
-        allEmojis[currentEmojiIndex].eyeBlinkLeft[1]+=1
-        allEmojis[currentEmojiIndex].eyeBlinkRight[1]+=1
-        allEmojis[currentEmojiIndex].eyeLeftWide[1]+=1
+        var reset: Float = 1
+        
+        
+        allEmojis[currentEmojiIndex].toungeOut[1] += reset
+        allEmojis[currentEmojiIndex].jawOpen[1] += reset
+        allEmojis[currentEmojiIndex].mouthSmileLeft[1] += reset
+        allEmojis[currentEmojiIndex].mouthSmileRight[1] += reset
+        allEmojis[currentEmojiIndex].mouthPucker[1] += reset
+        allEmojis[currentEmojiIndex].mouthPressLeft[1] += reset
+        allEmojis[currentEmojiIndex].mouthPressRight[1] += reset
+        allEmojis[currentEmojiIndex].mouthDimpleLeft[1]+=reset
+        allEmojis[currentEmojiIndex].browDownLeft[1]+=reset
+        allEmojis[currentEmojiIndex].browDownRight[1]+=reset
+        allEmojis[currentEmojiIndex].browInnerUp[1]+=reset
+        allEmojis[currentEmojiIndex].browOuterUpLeft[1]+=reset
+        allEmojis[currentEmojiIndex].mouthFrownLeft[1]+=reset
+        allEmojis[currentEmojiIndex].mouthFrownRight[1]+=reset
+        allEmojis[currentEmojiIndex].eyeLookDownLeft[1]+=reset
+        allEmojis[currentEmojiIndex].eyeLookDownRight[1]+=reset
+        allEmojis[currentEmojiIndex].eyeLookOutLeft[1]+=reset
+        allEmojis[currentEmojiIndex].eyeBlinkLeft[1]+=reset
+        allEmojis[currentEmojiIndex].eyeBlinkRight[1]+=reset
+        allEmojis[currentEmojiIndex].eyeLeftWide[1]+=reset
         
         if currentEmojiIndex == 10{
             setUp = true
-            instructionsLabel.text = "Callibration complete! Callibration can be continued to ensure better results. To continue press 'calibrate'"
+            instructionsLabel.text = "Calibration complete! Calibration can be continued to ensure better results. To continue press 'calibrate'"
             smileLabel.isHidden = true
             callibrationRoundComplete = true
         }
         currentEmojiIndex = (currentEmojiIndex + 1)%11
-        smileLabel.text = testEmojis[currentEmojiIndex]
+        smileLabel.text = labelEmojis[currentEmojiIndex]
     }
     
     
     
 }
 
+//used to get face values
+//continusly gets values 
 extension ViewController: ARSCNViewDelegate {
     
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
@@ -307,7 +463,7 @@ extension ViewController: ARSCNViewDelegate {
             self.tmpEmoji.mouthPressLeft[0]=mouthPressLeft
             self.tmpEmoji.mouthPressRight[0]=mouthPressRight
             self.tmpEmoji.mouthDimpleLeft[0]=mouthDimpleLeft
-            self.tmpEmoji.mouthDimpleRight[0]=mouthDimpleLeft
+            self.tmpEmoji.mouthDimpleRight[0]=mouthDimpleRight
             self.tmpEmoji.browDownLeft[0]=browDownLeft
             self.tmpEmoji.browDownRight[0]=browDownRight
             self.tmpEmoji.browInnerUp[0]=browInnerUp
@@ -321,7 +477,7 @@ extension ViewController: ARSCNViewDelegate {
             self.tmpEmoji.eyeBlinkLeft[0] = leftEye
             self.tmpEmoji.eyeLeftWide[0] = eyeLeftWide
             
-            if self.currentGame == 0 && !self.pauseEmojiMatch {
+            if self.currentGame == 0 && !self.freezeMode {
                 self.generateEmoji()
             }
             
